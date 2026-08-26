@@ -49,3 +49,4 @@ This is the maximum amount of manual effort work I can produce.
 
 Thank you for your understanding.
 
+I am gone delete this part after your decision
