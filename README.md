@@ -38,7 +38,7 @@ Caffeine Crisis is a game where you play as a barista racing against time. You m
 
 ---
 
-## To be added
+## These are the things on my mind.
 
  Dual Water Tap
  Ice Dispenser 
