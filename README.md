@@ -12,6 +12,8 @@
 ## **About the Game**
 Caffeine Crisis is a game where you play as a barista racing against time. You must prepare the recipes customers want by clicking the correct keys and serve them.
 
+Built With : Unity (2022.3 LTS)
+
 ---
 
 ## **Features**
@@ -30,10 +32,6 @@ Caffeine Crisis is a game where you play as a barista racing against time. You m
 3. Click on the workstation buttons (`Add Coffee`, `Add Milk`, `Add Water`) to fill your cup.
 4. Click Serve Drink / Hit the Service Bell to deliver the order before time runs out!
 
-
----
-
-## Built With : Unity (2022.3 LTS)
 
 ---
 
