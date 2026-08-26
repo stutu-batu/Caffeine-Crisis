@@ -1,11 +1,11 @@
 #      Caffeine Crisis
 
-> A 2D coffee shop simulation game built with Unity
+> A 2D coffee barista simulation game
 
 <img width="965" height="606" alt="ss" src="https://github.com/user-attachments/assets/d444fc25-92e7-4715-84a3-bc7f5b77d6c0" />
 
 
-🎮 **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
+   **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
 
 ---
 
@@ -17,10 +17,9 @@ Caffeine Crisis is a game where you play as a barista racing against time. You m
 ## **Features**
   * Hand-Drawn style 2D Art
   * Recipe System
-  * **Coffee Station
-  * **Dual Water Tap (Will added next update)
-  * **Milk Station
-  * Ice Dispenser (Will added next update)
+  * Coffee Station
+  * Milk Station
+  * Water Tap
   * Service Bell
 
 ---
@@ -34,7 +33,14 @@ Caffeine Crisis is a game where you play as a barista racing against time. You m
 
 ---
 
-## 🛠️ Built With
-* **Engine:** Unity (2022.3 LTS)
+## Built With
+* Engine: Unity (2022.3 LTS)
 
 ---
+
+## To be added
+
+ Dual Water Tap
+ Ice Dispenser 
+ **Most Important** customerss
+
