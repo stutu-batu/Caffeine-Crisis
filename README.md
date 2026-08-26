@@ -15,9 +15,8 @@
 ---
 
 ## ✨ Features
-  * **Hand-Drawn 2D Art:** Unique, cozy coffee shop aesthetic with custom-designed stations.
-  * **Dynamic Recipe System:** Prepare Strong Espressos, Sweet Lattes and Smooth Americanos.
-  * **Interactive Workstation:**
+  * **Hand-Drawn style 2D Art:** Unique, cozy coffee shop aesthetic with custom-designed stations.
+  * **Recipe System:** Prepare Strong Espressos, Sweet Lattes and Smooth Americanos.
   * **Coffee Station**
   * **Dual Water Tap** (Will added next update)
   * **Milk Station**
