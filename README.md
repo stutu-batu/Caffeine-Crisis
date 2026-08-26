@@ -42,3 +42,10 @@ Built With : Unity (2022.3 LTS)
  **Most Important** customerss
  And more recipes
 
+ ## Dear Evaluator
+ I initially used AI, but I made all the subsequent changes myself. Since it is not my native language, I used a translation tool.
+
+This is the maximum amount of manual effort work I can produce.
+
+Thank you for your understanding.
+
