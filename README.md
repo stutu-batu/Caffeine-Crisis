@@ -10,18 +10,18 @@
 ---
 
 ## 📖 About the Game
-**Caffeine Crisis** is a cozy yet chaotic 2D barista simulator where you manage a high-demand coffee counter. Listen to customer orders, combine the right ingredients (coffee, milk, hot/cold water, ice), and serve drinks as fast as possible to keep your score high!
+**Caffeine Crisis** is a cozy yet chaotic 2D barista simulator where you manage a high-demand coffee counter. Listen to customer orders, combine the right ingredients (coffee, milk, water, ice), and serve drinks as fast as possible to keep your score high!
 
 ---
 
 ## ✨ Features
 * 🎨 **Hand-Drawn 2D Art:** Unique, cozy coffee shop aesthetic with custom-designed stations.
-* ☕ **Dynamic Recipe System:** Prepare Strong Espressos, Sweet Lattes, Smooth Americanos, and cold drinks.
+* ☕ **Dynamic Recipe System:** Prepare Strong Espressos, Sweet Lattes and Smooth Americanos.
 * 🛠️ **Interactive Workstation:**
   * **Coffee Station:** Portafilter espresso machine + coffee bean grinder.
-  * **Dual Water Tap:** Separate controls for Hot and Cold water.
+  * **Dual Water Tap:** Separate controls for Hot and Cold water.(Will added next update)
   * **Milk Station:** Fresh milk pitcher on a weighing scale.
-  * **Ice Dispenser:** For iced drinks and special recipes.
+  * **Ice Dispenser:** For iced drinks and special recipes.(Will added next update)
   * **Service Bell:** Complete orders and earn points!
 
 ---
