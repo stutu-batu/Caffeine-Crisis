@@ -36,4 +36,3 @@
 2. Check the **Recipe Book** to see the required ingredients.
 3. Click on the workstation buttons (`Add Coffee`, `Add Milk`, `Add Water`) to fill your cup.
 4. Click **Serve Drink** / Hit the Service Bell to deliver the order before time runs out!
-5. ,
