@@ -33,8 +33,7 @@ Caffeine Crisis is a game where you play as a barista racing against time. You m
 
 ---
 
-## Built With
-* Engine: Unity (2022.3 LTS)
+## Built With : Unity (2022.3 LTS)
 
 ---
 
