@@ -4,9 +4,6 @@
 
 <img width="957" height="597" alt="readme" src="https://github.com/user-attachments/assets/0eb6ac03-9239-4cd2-a2b8-653c92b93663" />
 
-
-
-
    **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
 
 ---
@@ -39,8 +36,13 @@ Built With : Unity (2022.3 LTS)
 
 ## These are the things on my mind.
 
- Dual Water Tap
- Ice Dispenser 
- **Most Important** customerss
- And more recipes
+ * Dual Water Tap
+ * Ice Dispenser 
+ * **Most Important** customerss
+ * And more recipes
 
+---
+
+## Why I am makin this project ??
+
+Because I want to improve myself and see my name appear in a high-quality game one day.
