@@ -2,7 +2,8 @@
 
 > A 2D coffee barista simulation game
 
-<img width="959" height="599" alt="Opera Anlık görüntü_2026-08-27_143620_stutu-batu github io" src="https://github.com/user-attachments/assets/989b480d-731a-4f62-bbb7-ae1c53c0d835" />
+<img width="957" height="597" alt="readme" src="https://github.com/user-attachments/assets/0eb6ac03-9239-4cd2-a2b8-653c92b93663" />
+
 
 
 
