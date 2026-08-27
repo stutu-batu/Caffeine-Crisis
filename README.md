@@ -2,7 +2,8 @@
 
 > A 2D coffee barista simulation game
 
-<img width="965" height="606" alt="ss" src="https://github.com/user-attachments/assets/d444fc25-92e7-4715-84a3-bc7f5b77d6c0" />
+<img width="959" height="599" alt="Opera Anlık görüntü_2026-08-27_143620_stutu-batu github io" src="https://github.com/user-attachments/assets/989b480d-731a-4f62-bbb7-ae1c53c0d835" />
+
 
 
    **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
