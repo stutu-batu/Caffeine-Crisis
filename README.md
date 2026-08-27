@@ -47,5 +47,3 @@ Built With : Unity (2022.3 LTS)
 
 Because I want to improve myself and see my name appear in a high-quality game one day.
 
-## And dear evaluator
-I did whatever you said; please accept my project.
