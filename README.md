@@ -2,7 +2,8 @@
 
 > A 2D coffee barista simulation game
 
-<img width="957" height="597" alt="readme" src="https://github.com/user-attachments/assets/0eb6ac03-9239-4cd2-a2b8-653c92b93663" />
+<img width="1436" height="860" alt="gameplay" src="https://github.com/user-attachments/assets/bf882884-3c39-454b-b7e0-5f8927460eb9" />
+
 
    **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
 
@@ -15,34 +16,13 @@ Built With : Unity (2022.3 LTS)
 
 ---
 
-## **Features**
-  * Hand-Drawn style 2D Art
-  * Recipe System
-  * Coffee Station
-  * Milk Station
-  * Water Tap
-  * Service Bell
+<img width="1213" height="570" alt="howtoplay" src="https://github.com/user-attachments/assets/2aadde1a-b987-48e4-b227-75b91d8de882" />
 
 ---
 
-##  **How to Play**
-1. Read the Customer Order displayed on the screen.
-2. Check the Recipe Book to see the required ingredients.
-3. Click on the workstation buttons (`Add Coffee`, `Add Milk`, `Add Water`) to fill your cup.
-4. Click Serve Drink / Hit the Service Bell to deliver the order before time runs out!
-
+<img width="1269" height="677" alt="shop" src="https://github.com/user-attachments/assets/af551d56-92b4-4a2d-bf38-c6c8a3cbb95e" />
 
 ---
-
-## These are the things on my mind.
-
- * Dual Water Tap
- * Ice Dispenser 
- * **Most Important** customerss
- * And more recipes
-
----
-
 ## Why I am makin this project ??
 
 Because I want to improve myself and see my name appear in a high-quality game one day.
