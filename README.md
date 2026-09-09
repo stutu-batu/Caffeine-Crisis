@@ -5,7 +5,7 @@
 <img width="1436" height="860" alt="gameplay" src="https://github.com/user-attachments/assets/bf882884-3c39-454b-b7e0-5f8927460eb9" />
 
 
-   **[Play the Game in Your Browser](https://stutu-batu.github.io/Caffeine-Crisis/)**
+   **[Play the Game in Your Browser](https://stutu-batu.itch.io/caffeine-crisis)**
 
 ---
 
