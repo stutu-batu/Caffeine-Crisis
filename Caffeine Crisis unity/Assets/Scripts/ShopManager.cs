@@ -42,7 +42,7 @@ public class ShopManager : MonoBehaviour
     // Baz Süreler (Saniye)
     private const float BASE_COFFEE_TIME = 1.8f;
     private const float BASE_MILK_TIME = 1.8f;
-    private const float BASE_ICE_TIME = 0.8f;
+    private const float BASE_ICE_TIME = 2.0f;
     private const float BASE_CREAM_TIME = 0.8f;
     private const float BASE_SYRUP_TIME = 1.5f;
 

@@ -5,7 +5,10 @@ using UnityEngine;
 public class CustomerManager : MonoBehaviour
 {
     public Customer customerSlot;
-    public Sprite defaultCustomerSprite;
+
+    [Header("Customer Visuals")]
+    public List<Sprite> customerSprites = new List<Sprite>();
+    public Sprite defaultCustomerSprite; // Liste boş kalırsa yedek olarak kullanılacak
 
     [Header("Base Spawn Settings")]
     public float baseMinSpawnTime = 8f;
@@ -50,15 +53,43 @@ public class CustomerManager : MonoBehaviour
                 
                 if (!string.IsNullOrEmpty(validRecipe))
                 {
-                    customerSlot.SetupCustomer(defaultCustomerSprite, validRecipe);
+                    // Müşteri geldi zil sesi!
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlaySFX(SoundManager.Instance.bellRingClip);
+                    }
+
+                    // Rastgele müşteri görselini seç ve gönder
+                    Sprite randomSprite = GetRandomCustomerSprite();
+                    customerSlot.SetupCustomer(randomSprite, validRecipe);
                 }
             }
         }
     }
 
+    // Listeden rastgele bir müşteri görseli seçer
+    Sprite GetRandomCustomerSprite()
+    {
+        if (customerSprites != null && customerSprites.Count > 0)
+        {
+            int randomIndex = Random.Range(0, customerSprites.Count);
+            return customerSprites[randomIndex];
+        }
+
+        // Eğer liste boşsa veya tanımlanmadıysa varsayılan görseli dön
+        return defaultCustomerSprite;
+    }
+
     // Sadece malzemeleri AÇIK olan tariflerden rastgele seçer
     string GetValidRandomRecipe()
     {
+        // Tutorial aktifse müşteri kesinlikle Strong Espresso istesin
+        CafeManager cafeManager = FindObjectOfType<CafeManager>();
+        if (cafeManager != null && cafeManager.isTutorialActive)
+        {
+            return "Strong Espresso";
+        }
+
         List<string> validRecipes = new List<string>();
 
         // Temel Tarifler (Kilit Yok)

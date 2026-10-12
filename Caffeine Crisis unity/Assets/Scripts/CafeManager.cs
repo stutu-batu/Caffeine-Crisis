@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CafeManager : MonoBehaviour
 {
@@ -21,9 +22,20 @@ public class CafeManager : MonoBehaviour
     public Button vanillaButton;
     public Button caramelButton;
 
+    [Header("Cooldown Overlays")]
+    public Image coffeeCooldownOverlay;
+    public Image milkCooldownOverlay;
+    public Image hotWaterCooldownOverlay;
+    public Image coldWaterCooldownOverlay;
+    public Image iceCooldownOverlay;
+    public Image chocolateCooldownOverlay;
+    public Image creamCooldownOverlay;
+    public Image vanillaCooldownOverlay;
+    public Image caramelCooldownOverlay;
+
     [Header("Disabled Color Settings")]
-    [SerializeField] private Color normalDisabledColor = new Color(0.5f, 0.0f, 0.0f, 0.5f); // İşlem esnasındaki geçici gri
-    [SerializeField] private Color lockedDisabledColor = new Color(0.1f, 0.1f, 0.1f, 0.9f);  // Satın alınmamış koyu renk
+    [SerializeField] private Color normalDisabledColor = new Color(0.5f, 0.0f, 0.0f, 0.5f);
+    [SerializeField] private Color lockedDisabledColor = new Color(0.1f, 0.1f, 0.1f, 0.9f);
 
     [Header("Manager References")]
     public CustomerManager customerManager;
@@ -54,7 +66,19 @@ public class CafeManager : MonoBehaviour
 
     [Header("Game Logic")]
     public int score = 0;
-    private bool isProcessing = false;
+    public bool isProcessing = false;
+
+    [Header("Tutorial UI References")]
+    public GameObject tutorialPanel;
+    public TextMeshProUGUI tutorialText;
+    public Button tutorialNextButton;
+
+    [Header("Tutorial State")]
+    public bool isTutorialActive = false;
+    public int tutorialStep = 0;
+
+    [Header("Tutorial Hand Reference")]
+    public TutorialHand tutorialHand;
 
     void Start()
     {
@@ -62,12 +86,123 @@ public class CafeManager : MonoBehaviour
         UpdateRecipeBook();
         UpdateUI();
         
-        // Buton renklerini kilit durumuna göre tanımla ve erişimleri ayarla
         UpdateIngredientButtonColors();
         SetAllStationButtonsInteractable(true);
+
+        if (SaveManager.LoadDay() == 1) // Veya ilk gün kontrolü
+        {
+            StartTutorial();
+        }
     }
 
-    // Butonların kapalı/pasif renk tonlarını belirler
+    #region Tutorial Logic
+
+    public void StartTutorial()
+    {
+        isTutorialActive = true;
+        tutorialStep = 0;
+        if (tutorialPanel != null) tutorialPanel.SetActive(true);
+
+        // Eğitimin başında bekletmeden hemen bir müşteri getirtelim!
+        if (customerManager != null && customerManager.customerSlot != null)
+        {
+            // Eğer masada müşteri yoksa anında doğur
+            if (!customerManager.customerSlot.gameObject.activeSelf)
+            {
+                customerManager.customerSlot.SetupCustomer(customerManager.defaultCustomerSprite, "Strong Espresso");
+            }
+        }
+
+        NextTutorialStep();
+    }
+
+    public void NextTutorialStep()
+    {
+        tutorialStep++;
+
+        switch (tutorialStep)
+        {
+            case 1:
+                // Aşama 1: Bardağı gösterme
+                if (tutorialText != null)
+                    tutorialText.text = "Welcome! This cup in the center is your main station. Everything you add will stack here layer by layer.";
+                if (tutorialNextButton != null) tutorialNextButton.gameObject.SetActive(true);
+                SetAllStationButtonsInteractable(false);
+
+                if (tutorialHand != null && cupContainer != null)
+                    tutorialHand.PointTo(cupContainer.GetComponent<RectTransform>());
+                break;
+
+            case 2:
+                // Aşama 2: İstasyonları gösterme
+                if (tutorialText != null)
+                    tutorialText.text = "The buttons around are your machines. Don't spam them while pouring—wait for each layer to finish! Darker buttons are locked. The red buttons means it's cooldown. You can only use one at a time.";
+                if (tutorialNextButton != null) tutorialNextButton.gameObject.SetActive(true);
+
+                if (tutorialHand != null && coffeeButton != null)
+                    tutorialHand.PointTo(coffeeButton.GetComponent<RectTransform>());
+                break;
+
+            case 3:
+                // Aşama 3: Kahve Butonunu Gösterme (1. Tık)
+                if (tutorialText != null)
+                    tutorialText.text = "The customer wants a 'Strong Espresso' (2 Coffee). Press the Coffee button to start!";
+                if (tutorialNextButton != null) tutorialNextButton.gameObject.SetActive(false);
+                
+                SetAllStationButtonsInteractable(false);
+                if (coffeeButton != null) coffeeButton.interactable = true;
+
+                if (tutorialHand != null && coffeeButton != null)
+                    tutorialHand.PointTo(coffeeButton.GetComponent<RectTransform>());
+                break;
+
+            case 4:
+                // Aşama 4: Kahve Butonunu Gösterme (2. Tık)
+                if (tutorialText != null)
+                    tutorialText.text = "Great! The first layer is filled. Press Coffee once more to finish the Strong Espresso recipe.";
+                if (tutorialNextButton != null) tutorialNextButton.gameObject.SetActive(false);
+                
+                SetAllStationButtonsInteractable(false);
+                if (coffeeButton != null) coffeeButton.interactable = true;
+
+                if (tutorialHand != null && coffeeButton != null)
+                    tutorialHand.PointTo(coffeeButton.GetComponent<RectTransform>());
+                break;
+
+            case 5:
+                // Aşama 5: Bardağı Müşteriye Sürükleme Hareketi
+                if (tutorialText != null)
+                    tutorialText.text = "The drink is ready! Drag the cup and drop it onto the customer to serve.";
+                SetAllStationButtonsInteractable(false);
+
+                if (tutorialHand != null && cupContainer != null && customerManager != null && customerManager.customerSlot != null)
+                {
+                    RectTransform cupRect = cupContainer.GetComponent<RectTransform>();
+                    RectTransform customerRect = customerManager.customerSlot.GetComponent<RectTransform>();
+                    tutorialHand.DragTo(cupRect, customerRect);
+                }
+                break;
+
+            case 6:
+                // Aşama 6: Tamamlama
+                if (tutorialText != null)
+                    tutorialText.text = "Awesome job on your first sale! You're ready to run the cafe on your own. Oh and one more thing, if you click the 'Trash' text you gona clear the cup.";
+                if (tutorialNextButton != null) tutorialNextButton.gameObject.SetActive(true);
+
+                if (tutorialHand != null) tutorialHand.Hide();
+                break;
+
+            case 7:
+                isTutorialActive = false;
+                if (tutorialPanel != null) tutorialPanel.SetActive(false);
+                if (tutorialHand != null) tutorialHand.Hide();
+                SetAllStationButtonsInteractable(true);
+                break;
+        }
+    }
+
+    #endregion
+
     void UpdateIngredientButtonColors()
     {
         SetButtonDisabledColor(iceButton, SaveManager.IsIngredientUnlocked("Ice"));
@@ -92,23 +227,35 @@ public class CafeManager : MonoBehaviour
         UpdateUI();
     }
 
-    // --- MAKİNE SEVİYESİNE GÖRE BEKLEME SÜRESİ HESAPLAMA ---
     float GetCalculatedCooldown(string machineType, float baseCooldown)
     {
         int level = SaveManager.LoadMachineLevel(machineType);
-        float speedMultiplier = 1f - ((level - 1) * 0.15f); 
+        float speedMultiplier = 1f - ((level - 1) * 0.15f);
         return Mathf.Max(0.3f, baseCooldown * speedMultiplier);
+    }
+
+    #region Add Ingredients
+
+    void PlayClick()
+    {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySFX(SoundManager.Instance.buttonClickClip);
     }
 
     public void AddCoffee()
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.coffeeMachineClip);
+
             float speed = GetCalculatedCooldown("Coffee", baseCoffeeCooldown);
             StartCoroutine(ProcessIngredientRoutine(
                 speed,
                 new Color(0.3f, 0.15f, 0.05f),
-                () => coffeeCount++
+                () => coffeeCount++,
+                coffeeCooldownOverlay
             ));
         }
     }
@@ -117,11 +264,16 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.pourLiquidClip);
+
             float speed = GetCalculatedCooldown("Milk", baseMilkCooldown);
             StartCoroutine(ProcessIngredientRoutine(
                 speed,
                 new Color(0.95f, 0.93f, 0.88f),
-                () => milkCount++
+                () => milkCount++,
+                milkCooldownOverlay
             ));
         }
     }
@@ -130,10 +282,15 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.hotWaterClip);
+
             StartCoroutine(ProcessIngredientRoutine(
                 waterCooldown,
                 new Color(0.8f, 0.2f, 0.2f, 0.6f),
-                () => hotWaterCount++
+                () => hotWaterCount++,
+                hotWaterCooldownOverlay
             ));
         }
     }
@@ -142,10 +299,15 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.coldWaterClip);
+
             StartCoroutine(ProcessIngredientRoutine(
                 waterCooldown,
                 new Color(0.4f, 0.7f, 1f, 0.7f),
-                () => coldWaterCount++
+                () => coldWaterCount++,
+                coldWaterCooldownOverlay
             ));
         }
     }
@@ -154,10 +316,15 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.iceMachineClip);
+
             StartCoroutine(ProcessIngredientRoutine(
                 iceCooldown,
                 new Color(0.8f, 0.95f, 1f, 0.6f),
-                () => iceCount++
+                () => iceCount++,
+                iceCooldownOverlay
             ));
         }
     }
@@ -166,11 +333,16 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.pumpClip);
+
             float speed = GetCalculatedCooldown("Syrup", baseSyrupCooldown);
             StartCoroutine(ProcessIngredientRoutine(
                 speed,
                 new Color(0.2f, 0.1f, 0.05f),
-                () => chocolateCount++
+                () => chocolateCount++,
+                chocolateCooldownOverlay
             ));
         }
     }
@@ -179,10 +351,15 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.creamClip);
+
             StartCoroutine(ProcessIngredientRoutine(
                 toppingCooldown,
                 new Color(1f, 0.98f, 0.95f),
-                () => creamCount++
+                () => creamCount++,
+                creamCooldownOverlay
             ));
         }
     }
@@ -191,11 +368,16 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.pumpClip);
+
             float speed = GetCalculatedCooldown("Syrup", baseSyrupCooldown);
             StartCoroutine(ProcessIngredientRoutine(
                 speed,
                 new Color(0.95f, 0.85f, 0.5f),
-                () => vanillaCount++
+                () => vanillaCount++,
+                vanillaCooldownOverlay
             ));
         }
     }
@@ -204,55 +386,98 @@ public class CafeManager : MonoBehaviour
     {
         if (!isProcessing && GetTotalIngredients() < maxIngredients)
         {
+            PlayClick();
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX(SoundManager.Instance.pumpClip);
+
             float speed = GetCalculatedCooldown("Syrup", baseSyrupCooldown);
             StartCoroutine(ProcessIngredientRoutine(
                 speed,
                 new Color(0.75f, 0.4f, 0.1f),
-                () => caramelCount++
+                () => caramelCount++,
+                caramelCooldownOverlay
             ));
         }
     }
 
-    IEnumerator ProcessIngredientRoutine(float processTime, Color layerColor, System.Action addCountLogic)
+    #endregion
+
+    // Malzeme işleme rutinimiz (Cooldown görseli dolumu)
+    IEnumerator ProcessIngredientRoutine(float cooldownTime, Color layerColor, System.Action onComplete, Image cooldownOverlay = null)
     {
         isProcessing = true;
-        SetAllStationButtonsInteractable(false);
 
-        yield return new WaitForSeconds(processTime);
+        if (cooldownOverlay != null)
+        {
+            cooldownOverlay.gameObject.SetActive(true);
+            cooldownOverlay.fillAmount = 1f;
+        }
 
-        addCountLogic.Invoke();
+        float elapsed = 0f;
+        while (elapsed < cooldownTime)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / cooldownTime;
+
+            if (cooldownOverlay != null)
+            {
+                cooldownOverlay.fillAmount = 1f - progress;
+            }
+
+            yield return null;
+        }
+
+        if (cooldownOverlay != null)
+        {
+            cooldownOverlay.fillAmount = 0f;
+            cooldownOverlay.gameObject.SetActive(false);
+        }
+
+        onComplete?.Invoke();
         AddLayerVisual(layerColor);
 
         isProcessing = false;
-        SetAllStationButtonsInteractable(true);
+
+        // --- TUTORIAL KONTROLÜ (EKLENEN KISIM) ---
+        if (isTutorialActive)
+        {
+            // 3. Adım: İlk kahve basıldı -> 4. Adıma geç
+            if (tutorialStep == 3)
+            {
+                NextTutorialStep();
+            }
+            // 4. Adım: İkinci kahve basıldı -> 5. Adıma (Sürükleme) geç
+            else if (tutorialStep == 4)
+            {
+                NextTutorialStep();
+            }
+        }
     }
 
     void SetAllStationButtonsInteractable(bool state)
     {
-        // Temel malzemeler
         if (coffeeButton != null) coffeeButton.interactable = state;
         if (milkButton != null) milkButton.interactable = state;
         if (hotWaterButton != null) hotWaterButton.interactable = state;
         if (coldWaterButton != null) coldWaterButton.interactable = state;
 
-        // Özel malzemeler (Açık mı VE işlem devam etmiyor mu kontrolü)
-        if (iceButton != null) 
+        if (iceButton != null)
             iceButton.interactable = state && SaveManager.IsIngredientUnlocked("Ice");
             
-        if (chocolateButton != null) 
+        if (chocolateButton != null)
             chocolateButton.interactable = state && SaveManager.IsIngredientUnlocked("Chocolate");
             
-        if (caramelButton != null) 
+        if (caramelButton != null)
             caramelButton.interactable = state && SaveManager.IsIngredientUnlocked("Caramel");
             
-        if (vanillaButton != null) 
+        if (vanillaButton != null)
             vanillaButton.interactable = state && SaveManager.IsIngredientUnlocked("Vanilla");
             
-        if (creamButton != null) 
+        if (creamButton != null)
             creamButton.interactable = state && SaveManager.IsIngredientUnlocked("Cream");
     }
 
-    int GetTotalIngredients()
+    public int GetTotalIngredients()
     {
         return coffeeCount + milkCount + hotWaterCount + coldWaterCount + iceCount + chocolateCount + creamCount + vanillaCount + caramelCount;
     }
@@ -262,12 +487,13 @@ public class CafeManager : MonoBehaviour
         currentLayers.Add(layerColor);
         GameObject newLayer = Instantiate(liquidLayerPrefab, cupContainer);
         Image layerImage = newLayer.GetComponent<Image>();
-        layerImage.color = layerColor;
+        if (layerImage != null) layerImage.color = layerColor;
     }
 
     public void ServeDrink()
     {
         if (isProcessing) return;
+        if (GetTotalIngredients() == 0) return;
 
         if (customerManager != null && customerManager.customerSlot != null && customerManager.customerSlot.gameObject.activeSelf)
         {
@@ -276,7 +502,12 @@ public class CafeManager : MonoBehaviour
 
             if (preparedDrink == currentCustomerOrder)
             {
-                Debug.Log("Doğru İçecek!");
+                Debug.Log("Correct Drink!");
+
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX(SoundManager.Instance.moneyPayClip);
+                }
 
                 int price = GetDrinkPrice(preparedDrink);
                 int cost = GetDrinkCost(preparedDrink);
@@ -292,10 +523,15 @@ public class CafeManager : MonoBehaviour
                 customerManager.customerSlot.CustomerLeftSatisfied();
                 ResetCup();
                 UpdateUI();
+
+                if (isTutorialActive && tutorialStep == 5)
+                {
+                    NextTutorialStep();
+                }
             }
             else
             {
-                Debug.Log("Yanlış İçecek!");
+                Debug.Log("Wrong Drink!");
                 score -= 40;
                 if (score < 0) score = 0;
                 SaveManager.SaveCoins(score);
@@ -305,7 +541,6 @@ public class CafeManager : MonoBehaviour
         }
     }
 
-    // --- ÇEKİRDEK KALİTESİNE GÖRE PRİCE HESABI ---
     int GetDrinkPrice(string drinkName)
     {
         int basePrice = 0;
@@ -350,31 +585,31 @@ public class CafeManager : MonoBehaviour
 
     string GetPreparedDrinkName()
     {
-        if (coffeeCount == 2 && milkCount == 0 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 2 && milkCount == 0 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Strong Espresso";
 
-        if (coffeeCount == 1 && milkCount == 2 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && milkCount == 2 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Sweet Latte";
 
-        if (coffeeCount == 1 && hotWaterCount == 2 && milkCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && hotWaterCount == 2 && milkCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Hot Americano";
 
-        if (coffeeCount == 1 && coldWaterCount == 1 && iceCount == 1 && milkCount == 0 && hotWaterCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && coldWaterCount == 1 && iceCount == 1 && milkCount == 0 && hotWaterCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Cold Brew";
 
-        if (coffeeCount == 1 && milkCount == 1 && iceCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && milkCount == 1 && iceCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Iced Latte";
 
-        if (coffeeCount == 1 && milkCount == 1 && chocolateCount == 1 && creamCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && milkCount == 1 && chocolateCount == 1 && creamCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Creamy Mocha";
 
-        if (coffeeCount == 1 && milkCount == 1 && chocolateCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && milkCount == 1 && chocolateCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && creamCount == 0 && vanillaCount == 0 && caramelCount == 0)
             return "Mocha";
 
-        if (coffeeCount == 1 && milkCount == 1 && caramelCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0) 
+        if (coffeeCount == 1 && milkCount == 1 && caramelCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && vanillaCount == 0)
             return "Caramel Macchiato";
 
-        if (coffeeCount == 1 && milkCount == 1 && vanillaCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && caramelCount == 0) 
+        if (coffeeCount == 1 && milkCount == 1 && vanillaCount == 1 && hotWaterCount == 0 && coldWaterCount == 0 && iceCount == 0 && chocolateCount == 0 && creamCount == 0 && caramelCount == 0)
             return "Vanilla Latte";
 
         return "Unknown Drink";
@@ -425,7 +660,7 @@ public class CafeManager : MonoBehaviour
     {
         if (GetTotalIngredients() > 0)
         {
-            Debug.Log("Bardak çöpe döküldü!");
+            Debug.Log("Cup emptied into trash!");
             ResetCup();
             UpdateUI();
         }

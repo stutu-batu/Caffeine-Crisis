@@ -6,7 +6,7 @@ using TMPro;
 public class DayManager : MonoBehaviour
 {
     [Header("Time Settings")]
-    public float dayDurationInSeconds = 60f; 
+    public float dayDurationInSeconds = 60f;
     private float timer = 0f;
     public bool isDayActive = true;
 
@@ -91,11 +91,14 @@ public class DayManager : MonoBehaviour
     {
         isWaitingForLastCustomer = true;
 
-        if (customerManager != null && customerManager.customerSlot != null && customerManager.customerSlot.gameObject.activeSelf)
+        // Süre doldu, yeni müşteri gelmesini engelle
+        if (customerManager != null)
         {
-            Debug.Log("Gün süresi bitti, son müşterinin gitmesi bekleniyor...");
+            customerManager.CancelInvoke(); 
         }
-        else
+
+        // Masada aktif müşteri yoksa günü hemen bitir, varsa müşterinin gitmesini bekle
+        if (customerManager == null || customerManager.customerSlot == null || !customerManager.customerSlot.gameObject.activeSelf)
         {
             FinalizeDay();
         }
@@ -103,10 +106,18 @@ public class DayManager : MonoBehaviour
 
     public void CheckIfDayCanFullyEnd()
     {
+        // Müşteri masadan ayrıldığında (CustomerLeftSatisfied veya CustomerLeftUnsatisfied sonrası) tetiklenir
         if (isWaitingForLastCustomer)
         {
-            FinalizeDay();
+            StartCoroutine(WaitAndFinalize());
         }
+    }
+
+    private IEnumerator WaitAndFinalize()
+    {
+        // Müşterinin ayrılma animasyonu tamamlansın diye kısa bekleme
+        yield return new WaitForSeconds(0.5f);
+        FinalizeDay();
     }
 
     void FinalizeDay()
@@ -114,13 +125,11 @@ public class DayManager : MonoBehaviour
         isDayActive = false;
         Time.timeScale = 0f;
 
-        
         int totalExpenses = dailyRent + dailyIngredientCost;
         int netProfit = dailyEarnings - totalExpenses;
 
         if (cafeManager != null)
         {
-            
             cafeManager.AddScore(-totalExpenses);
         }
 
